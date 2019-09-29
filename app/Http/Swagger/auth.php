@@ -1,9 +1,10 @@
 <?php
 /**
  * @OA\SecurityScheme(
- *     type="apiKey",
+ *     type="http",
  *     in="header",
- *     securityScheme="api_key",
- *     name="Authorization"
+ *     scheme="bearer",
+ *     securityScheme="authToken",
+ *     bearerFormat="JWT",
  * )
  */

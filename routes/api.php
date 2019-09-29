@@ -14,13 +14,14 @@ use Illuminate\Http\Request;
 */
 
 Route::group([
-    'middleware' => 'api',
     'prefix' => 'auth'
-], function ($router) {
-
+], function () {
     Route::post('login', 'Api\AuthController@login');
-    Route::post('logout', 'Api\AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+
+    Route::group(['middleware' => 'jwt.auth'], function() {
+        Route::post('logout', 'Api\AuthController@logout');
+        Route::post('refresh', 'Api\AuthController@refresh');
+        Route::post('user', 'Api\AuthController@user');
+    });
 
 });

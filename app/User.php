@@ -7,9 +7,52 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * @OA\Schema(
+ *     description="User model",
+ *     title="User model",
+ *     required={"name", "email", "password"},
+ *     @OA\Xml(
+ *         name="User"
+ *     )
+ * )
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
+
+    /**
+     * @OA\Property(
+     *     format="int",
+     *     description="ID",
+     *     title="ID",
+     * )
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     format="string",
+     *     description="Name",
+     *     title="Name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     format="string",
+     *     description="Email",
+     *     title="Email",
+     * )
+     *
+     * @var string
+     */
+    private $email;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +69,11 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'email_verified_at',
+        'password',
+        'remember_token',
+        'created_at',
+        'updated_at'
     ];
 
     /**

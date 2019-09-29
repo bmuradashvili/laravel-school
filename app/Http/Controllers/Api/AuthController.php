@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Validator;
+
 class AuthController extends Controller
 {
     /**
@@ -11,7 +13,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('jwt.auth', ['except' => ['login']]);
     }
 
     /**
@@ -20,13 +22,7 @@ class AuthController extends Controller
      *   operationId="login",
      *   tags={"Auth"},
      *   summary="Authenticate user",
-     *   description="Returns tokens",
-     *   @OA\Response(
-     *     response=200,
-     *     description="successful operation"
-     *   ),
-     *   @OA\Response(response=400, description="Bad request"),
-     *   @OA\Response(response=401, description="Unauthorized"),
+     *   description="User authorization service",
      *   @OA\RequestBody(
      *     description="Email and password values",
      *     required=true,
@@ -39,33 +35,141 @@ class AuthController extends Controller
      *       )
      *     )
      *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful operation",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="data", description="Data object", type="object",
+     *         @OA\Property(property="access_token", description="auth token", type="string"),
+     *         @OA\Property(property="token_type", description="token type", type="string"),
+     *         @OA\Property(property="expires_in", description="expires in seconds", type="integer"),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=400,
+     *     description="Bad request",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="errors", description="Errors object", type="object",
+     *         @OA\Property(property="email", description="email error messages", type="array",
+     *           @OA\Items(type="string")
+     *         ),
+     *         @OA\Property(property="password", description="password error messages", type="array",
+     *           @OA\Items(type="string")
+     *         ),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Invalid credentials",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="error", description="Error message", type="string")
+     *     ),
+     *   ),
      * )
      *
-     * Returns tokens
+     * Returns authorization info
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function login()
     {
         $credentials = request(['email', 'password']);
+        $validator = Validator::make($credentials, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if ($validator->fails()) {
+            return $this->fail($validator->errors());
+        }
+
+        if (!$token = auth()->attempt($credentials)) {
+            return $this->error("Invalid credentials", 401);
         }
 
         return $this->respondWithToken($token);
     }
 
     /**
-     * Get the authenticated User.
+     * @OA\Post(
+     *   path="/api/auth/user",
+     *   operationId="user",
+     *   tags={"Auth"},
+     *   summary="Get authenticated user",
+     *   description="Returns user object",
+     *   @OA\Header(
+     *     header="bearerAuth",
+     *     description="JWT access token",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful",
+     *     @OA\JsonContent(ref="#/components/schemas/User"),
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Unauthorized",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="error", description="Error message", type="string")
+     *     ),
+     *   ),
+     *   security={
+     *     {"authToken": {}}
+     *   }
+     * )
+     *
+     * Returns serialized user object
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function user()
     {
-        return response()->json(auth()->user());
+        return $this->success(auth()->user());
     }
 
     /**
-     * Log the user out (Invalidate the token).
+     * @OA\Post(
+     *   path="/api/auth/logout",
+     *   operationId="logout",
+     *   tags={"Auth"},
+     *   summary="Logout",
+     *   description="Logs out a user",
+     *   @OA\Header(
+     *     header="bearerAuth",
+     *     description="JWT access token",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="data", description="Data object", type="object",
+     *         @OA\Property(property="message", description="success message", type="string"),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Unauthorized",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="error", description="Error message", type="string")
+     *     ),
+     *   ),
+     *   security={
+     *     {"authToken": {}}
+     *   }
+     * )
+     *
+     * Returns serialized user object
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -73,11 +177,48 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return $this->success(['message' => 'Successfully logged out']);
     }
 
     /**
-     * Refresh a token.
+     * @OA\Post(
+     *   path="/api/auth/refresh",
+     *   operationId="refresh",
+     *   tags={"Auth"},
+     *   summary="Refresh acccess token",
+     *   description="Expired access token refresh service",
+     *   @OA\Header(
+     *     header="bearerAuth",
+     *     description="JWT access token",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Successful operation",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="data", description="Data object", type="object",
+     *         @OA\Property(property="access_token", description="auth token", type="string"),
+     *         @OA\Property(property="token_type", description="token type", type="string"),
+     *         @OA\Property(property="expires_in", description="expires in seconds", type="integer"),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Unauthorized",
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="error", description="Error message", type="string")
+     *     ),
+     *   ),
+     *   security={
+     *     {"authToken": {}}
+     *   }
+     * )
+     *
+     * Returns refreshed authorization info
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -95,7 +236,7 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
+        return $this->success([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
