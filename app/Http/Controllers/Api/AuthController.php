@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\User;
+use App\Http\Resources\User as UserResource;
 
 class AuthController extends Controller
 {
@@ -111,7 +111,9 @@ class AuthController extends Controller
      *   @OA\Response(
      *     response=200,
      *     description="Successful",
-     *     @OA\JsonContent(ref="#/components/schemas/User"),
+     *     @OA\JsonContent(type="object",
+     *       @OA\Property(property="data", description="Response data", type="object", ref="#/components/schemas/User")
+     *     ),
      *   ),
      *   @OA\Response(
      *     response=401,
@@ -131,7 +133,7 @@ class AuthController extends Controller
      */
     public function user()
     {
-        return $this->success(new User(auth()->user()));
+        return $this->success(new UserResource(auth()->user()));
     }
 
     /**
