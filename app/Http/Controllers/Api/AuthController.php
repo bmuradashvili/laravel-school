@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\User;
 
 class AuthController extends Controller
 {
@@ -130,7 +131,7 @@ class AuthController extends Controller
      */
     public function user()
     {
-        return $this->success(auth()->user());
+        return $this->success(new User(auth()->user()));
     }
 
     /**
