@@ -1,5 +1,6 @@
 <?php
 
+use App\Position;
 use Illuminate\Database\Seeder;
 
 class PositionsTableSeeder extends Seeder
@@ -11,6 +12,7 @@ class PositionsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Position::query()->truncate();
+        $positions = factory(Position::class, 10)->create();
     }
 }
