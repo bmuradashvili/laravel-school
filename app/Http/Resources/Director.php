@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class User extends JsonResource
+class Director extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,16 @@ class User extends JsonResource
      */
     public function toArray($request)
     {
+        $thumbnailUrl = $this->media[0]->getFullUrl() ?? "";
+
         return [
             'id' => $this->id,
+            'position' => $this->position,
             'name' => $this->name,
-            'email' => $this->email
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'biography' => $this->biography,
+            'thumbnail' => $thumbnailUrl
         ];
     }
 }

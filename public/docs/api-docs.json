@@ -292,10 +292,459 @@
                     }
                 ]
             }
+        },
+        "/api/directors": {
+            "get": {
+                "tags": [
+                    "Directors"
+                ],
+                "summary": "Get list of directors",
+                "description": "Get directors service",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "Array of directors",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Director"
+                                            }
+                                        },
+                                        "links": {
+                                            "description": "Pagination urls",
+                                            "properties": {
+                                                "first": {
+                                                    "description": "First page url",
+                                                    "type": "string"
+                                                },
+                                                "last": {
+                                                    "description": "Last page url",
+                                                    "type": "string"
+                                                },
+                                                "prev": {
+                                                    "description": "Previous page url",
+                                                    "type": "string"
+                                                },
+                                                "next": {
+                                                    "description": "Next page url",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "description": "Pagination meta data",
+                                            "properties": {
+                                                "current_page": {
+                                                    "description": "Number of the current page",
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "description": "Number of the displayed first item in the whole paginated list",
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "description": "Last page number",
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "description": "Full url of the called service",
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "description": "Items per page",
+                                                    "type": "string"
+                                                },
+                                                "to": {
+                                                    "description": "Number of the displayed last item in the whole paginated list",
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "description": "Number of total records in the paginated list",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "authToken": []
+                    }
+                ]
+            }
+        },
+        "/api/teachers": {
+            "get": {
+                "tags": [
+                    "Teachers"
+                ],
+                "summary": "Get list of teachers",
+                "description": "Get teachers service",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "Array of teachers",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Teacher"
+                                            }
+                                        },
+                                        "links": {
+                                            "description": "Pagination urls",
+                                            "properties": {
+                                                "first": {
+                                                    "description": "First page url",
+                                                    "type": "string"
+                                                },
+                                                "last": {
+                                                    "description": "Last page url",
+                                                    "type": "string"
+                                                },
+                                                "prev": {
+                                                    "description": "Previous page url",
+                                                    "type": "string"
+                                                },
+                                                "next": {
+                                                    "description": "Next page url",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "description": "Pagination meta data",
+                                            "properties": {
+                                                "current_page": {
+                                                    "description": "Number of the current page",
+                                                    "type": "integer"
+                                                },
+                                                "from": {
+                                                    "description": "Number of the displayed first item in the whole paginated list",
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "description": "Last page number",
+                                                    "type": "integer"
+                                                },
+                                                "path": {
+                                                    "description": "Full url of the called service",
+                                                    "type": "string"
+                                                },
+                                                "per_page": {
+                                                    "description": "Items per page",
+                                                    "type": "string"
+                                                },
+                                                "to": {
+                                                    "description": "Number of the displayed last item in the whole paginated list",
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "description": "Number of total records in the paginated list",
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "authToken": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "Comment": {
+                "title": "Comment model",
+                "description": "Comment model",
+                "required": [
+                    "user",
+                    "text"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "user": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "rating": {
+                        "title": "Rating",
+                        "description": "rating (1-5)",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "text": {
+                        "title": "Text",
+                        "description": "text",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "image": {
+                        "title": "Image",
+                        "description": "image",
+                        "type": "string",
+                        "format": "byte"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Comment"
+                }
+            },
+            "Director": {
+                "title": "Director model",
+                "description": "Director model",
+                "required": [
+                    "position",
+                    "name",
+                    "email",
+                    "phone",
+                    "biography",
+                    "thumbnail"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "position": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Position"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "Email",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "phone": {
+                        "title": "Phone Number",
+                        "description": "phone",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "biography": {
+                        "title": "Biography",
+                        "description": "biography",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "thumbnail": {
+                        "title": "Thumbnail",
+                        "description": "thumbnail",
+                        "type": "string",
+                        "format": "byte"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Director"
+                }
+            },
+            "Message": {
+                "title": "Message model",
+                "description": "Message model",
+                "required": [
+                    "user",
+                    "text"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "user": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "text": {
+                        "title": "Text",
+                        "description": "text",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Message"
+                }
+            },
+            "Position": {
+                "title": "Position model",
+                "description": "Position model",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "name",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Position"
+                }
+            },
+            "Teacher": {
+                "title": "Teacher model",
+                "description": "Teacher model",
+                "required": [
+                    "position",
+                    "name",
+                    "email",
+                    "biography",
+                    "certified",
+                    "thumbnail"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "position": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Position"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "Email",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "biography": {
+                        "title": "Biography",
+                        "description": "biography",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "certified": {
+                        "title": "Certified",
+                        "description": "certified",
+                        "type": "boolean",
+                        "format": "string"
+                    },
+                    "thumbnail": {
+                        "title": "Thumbnail",
+                        "description": "thumbnail",
+                        "type": "string",
+                        "format": "byte"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Teacher"
+                }
+            },
             "User": {
                 "title": "User model",
                 "description": "User model",
@@ -343,6 +792,14 @@
         {
             "name": "Auth",
             "description": "All user authentication API services"
+        },
+        {
+            "name": "Directors",
+            "description": "All director API services"
+        },
+        {
+            "name": "Teachers",
+            "description": "All teacher API services"
         }
     ]
 }

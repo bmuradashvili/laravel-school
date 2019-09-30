@@ -23,5 +23,13 @@ Route::group([
         Route::post('refresh', 'Api\AuthController@refresh');
         Route::post('user', 'Api\AuthController@user');
     });
+});
 
+Route::group(['middleware' => 'jwt.auth'], function() {
+    Route::resource('directors', 'Api\DirectorController')->only([
+        'index'
+    ]);
+    Route::resource('teachers', 'Api\TeacherController')->only([
+        'index'
+    ]);
 });
