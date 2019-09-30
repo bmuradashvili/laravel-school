@@ -32,4 +32,11 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::resource('teachers', 'Api\TeacherController')->only([
         'index'
     ]);
+
+    Route::resource('messages', 'Api\MessageController')->only([
+        'store'
+    ]);
+    Route::resource('comments', 'Api\CommentController')->only([
+        'store'
+    ]);
 });

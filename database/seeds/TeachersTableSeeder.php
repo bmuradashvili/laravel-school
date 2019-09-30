@@ -20,7 +20,7 @@ class TeachersTableSeeder extends Seeder
         $imageUrl = $faker->imageUrl(640,480, null, false);
 
         foreach($teachers as $teacher){
-            $teacher->addMediaFromUrl($imageUrl)->toMediaCollection('thumbnail');
+            $teacher->addMediaFromUrl($imageUrl)->toMediaCollection('teacher_thumbnails');
         }
     }
 }

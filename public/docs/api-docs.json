@@ -74,14 +74,18 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request",
+                    "422": {
+                        "description": "Unprocessable Entity",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        },
                                         "errors": {
-                                            "description": "Errors object",
+                                            "description": "Errors object for more details",
                                             "properties": {
                                                 "email": {
                                                     "description": "email error messages",
@@ -293,6 +297,173 @@
                 ]
             }
         },
+        "/api/comments": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Insert new comment",
+                "description": "Store new comment service",
+                "operationId": "store",
+                "requestBody": {
+                    "description": "Comment object",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "commentable_type": {
+                                        "description": "App\\Director or App\\Teacher",
+                                        "type": "string"
+                                    },
+                                    "commentable_id": {
+                                        "description": "ID of the according(Director/Teacher) model",
+                                        "type": "integer"
+                                    },
+                                    "rating": {
+                                        "description": "Rating (1-5)",
+                                        "type": "int"
+                                    },
+                                    "text": {
+                                        "description": "Comment text",
+                                        "type": "string"
+                                    },
+                                    "image": {
+                                        "description": "Attached image",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "Comment object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Comment ID",
+                                                    "type": "integer"
+                                                },
+                                                "user": {
+                                                    "description": "User object",
+                                                    "type": "object",
+                                                    "$ref": "#/components/schemas/User"
+                                                },
+                                                "to": {
+                                                    "description": "Director or Teacher model",
+                                                    "type": "object"
+                                                },
+                                                "rating": {
+                                                    "description": "Rating (1-5)",
+                                                    "type": "integer"
+                                                },
+                                                "text": {
+                                                    "description": "Comment Text",
+                                                    "type": "string"
+                                                },
+                                                "image": {
+                                                    "description": "Image url",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "description": "Errors object for more details",
+                                            "properties": {
+                                                "commentable_type": {
+                                                    "description": "commentable_type error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "commentable_id": {
+                                                    "description": "commentable_id error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "rating": {
+                                                    "description": "rating error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "text": {
+                                                    "description": "comment text error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "image": {
+                                                    "description": "image error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "authToken": []
+                    }
+                ]
+            }
+        },
         "/api/directors": {
             "get": {
                 "tags": [
@@ -377,6 +548,142 @@
                                                 "total": {
                                                     "description": "Number of total records in the paginated list",
                                                     "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "authToken": []
+                    }
+                ]
+            }
+        },
+        "/api/messages": {
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Insert new message",
+                "description": "Store new message service",
+                "operationId": "store",
+                "requestBody": {
+                    "description": "Message object",
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "messageable_type": {
+                                        "description": "App\\Director or App\\Teacher",
+                                        "type": "string"
+                                    },
+                                    "messageable_id": {
+                                        "description": "ID of the according(Director/Teacher) model",
+                                        "type": "integer"
+                                    },
+                                    "text": {
+                                        "description": "Message text",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "Message object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Message ID",
+                                                    "type": "integer"
+                                                },
+                                                "user": {
+                                                    "description": "User object",
+                                                    "type": "object",
+                                                    "$ref": "#/components/schemas/User"
+                                                },
+                                                "to": {
+                                                    "description": "Director or Teacher model",
+                                                    "type": "object"
+                                                },
+                                                "text": {
+                                                    "description": "Message Text",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "description": "Errors object for more details",
+                                            "properties": {
+                                                "messageable_type": {
+                                                    "description": "messageable_type error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "messageable_id": {
+                                                    "description": "messageable_id error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "text": {
+                                                    "description": "message text error messages",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
                                                 }
                                             },
                                             "type": "object"
@@ -566,7 +873,7 @@
                         "title": "Image",
                         "description": "image",
                         "type": "string",
-                        "format": "byte"
+                        "format": "binary"
                     }
                 },
                 "type": "object",
@@ -624,7 +931,7 @@
                         "title": "Thumbnail",
                         "description": "thumbnail",
                         "type": "string",
-                        "format": "byte"
+                        "format": "binary"
                     }
                 },
                 "type": "object",
@@ -737,7 +1044,7 @@
                         "title": "Thumbnail",
                         "description": "thumbnail",
                         "type": "string",
-                        "format": "byte"
+                        "format": "binary"
                     }
                 },
                 "type": "object",
@@ -800,6 +1107,14 @@
         {
             "name": "Teachers",
             "description": "All teacher API services"
+        },
+        {
+            "name": "Messages",
+            "description": "All message API services"
+        },
+        {
+            "name": "Comments",
+            "description": "All comment API services"
         }
     ]
 }

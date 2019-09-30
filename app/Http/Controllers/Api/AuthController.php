@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\User as UserResource;
 
@@ -48,10 +49,11 @@ class AuthController extends Controller
      *     ),
      *   ),
      *   @OA\Response(
-     *     response=400,
-     *     description="Bad request",
+     *     response=422,
+     *     description="Unprocessable Entity",
      *     @OA\JsonContent(type="object",
-     *       @OA\Property(property="errors", description="Errors object", type="object",
+     *       @OA\Property(property="message", description="Error message", type="string"),
+     *       @OA\Property(property="errors", description="Errors object for more details", type="object",
      *         @OA\Property(property="email", description="email error messages", type="array",
      *           @OA\Items(type="string")
      *         ),
@@ -72,19 +74,12 @@ class AuthController extends Controller
      *
      * Returns authorization info
      *
+     * @param \App\Http\Requests\LoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(LoginRequest $request)
     {
-        $credentials = request(['email', 'password']);
-        $validator = Validator::make($credentials, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->fail($validator->errors());
-        }
+        $credentials = $request->validated();
 
         if (!$token = auth()->attempt($credentials)) {
             return $this->error("Invalid credentials", 401);

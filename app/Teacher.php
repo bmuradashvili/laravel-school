@@ -89,7 +89,7 @@ class Teacher extends Model implements HasMedia
     /**
      * @OA\Property(
      *     type="string",
-     *     format="byte",
+     *     format="binary",
      *     description="thumbnail",
      *     title="Thumbnail",
      * )

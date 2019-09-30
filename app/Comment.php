@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
@@ -67,7 +68,7 @@ class Comment extends Model implements HasMedia
     /**
      * @OA\Property(
      *     type="string",
-     *     format="byte",
+     *     format="binary",
      *     description="image",
      *     title="Image",
      * )
@@ -82,11 +83,11 @@ class Comment extends Model implements HasMedia
      * @static
      */
     public static $createRules = [
-        'commentable_type' => 'required|string',
+        'commentable_type' => 'required|in:App\Director,App\Teacher',
         'commentable_id' => 'required|poly_exists:commentable_type',
         'rating' => 'sometimes|required|integer|between:1,5',
         'text' => 'required|max:65535',
-        'image' => 'somtimes|required|image|size:4096'
+        'image' => 'sometimes|required|image|between:0,4096'
     ];
 
     /**
@@ -96,9 +97,9 @@ class Comment extends Model implements HasMedia
      */
     public static $updateRules = [
         'id' => 'required|exists:comments,id',
-        'rating' => 'required|integer|between:1,5',
+        'rating' => 'sometimes|required|integer|between:1,5',
         'text' => 'required|max:65535',
-        'image' => 'sometimes|required|image|size:4096'
+        'image' => 'sometimes|required|image|between:0,4096'
     ];
 
     /**

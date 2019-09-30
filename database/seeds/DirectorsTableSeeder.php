@@ -20,7 +20,7 @@ class DirectorsTableSeeder extends Seeder
         $imageUrl = $faker->imageUrl(640,480, null, false);
 
         foreach($directors as $director){
-            $director->addMediaFromUrl($imageUrl)->toMediaCollection('thumbnail');
+            $director->addMediaFromUrl($imageUrl)->toMediaCollection('director_thumbnails');
         }
     }
 }

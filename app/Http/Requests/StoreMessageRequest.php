@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Comment;
+use App\Message;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreComment extends FormRequest
+class StoreMessageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,6 @@ class StoreComment extends FormRequest
      */
     public function rules()
     {
-        return Comment::$createRules;
+        return Message::$createRules;
     }
 }

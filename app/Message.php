@@ -55,7 +55,7 @@ class Message extends Model
      * @static
      */
     public static $createRules = [
-        'messageable_type' => 'required|string',
+        'messageable_type' => 'required|in:App\Director,App\Teacher',
         'messageable_id' => 'required|integer|poly_exists:messageable_type',
         'text' => 'required|max:65535',
     ];
